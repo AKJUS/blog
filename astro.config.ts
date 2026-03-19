@@ -13,10 +13,10 @@ import { toString } from "hast-util-to-string";
 import { h, s } from "hastscript";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeExternalLinks from "rehype-external-links";
-import rehypeSlug from "rehype-slug";
 import remarkDirective from "remark-directive";
 import remarkSmartypants from "remark-smartypants";
 import { SITE } from "./src/constants";
+import { rehypeSlugCompat } from "./src/lib/rehype-slug-compat";
 import { remarkAsides } from "./src/remark";
 import { pagefindIntegration } from "./src/utils";
 
@@ -62,7 +62,7 @@ export default defineConfig({
     resolve: {
       dedupe: ["react", "react-dom"],
     },
-    plugins: [tailwindcss()],
+    plugins: tailwindcss() as any,
   },
   image: {
     service: imageService(),
@@ -79,7 +79,7 @@ export default defineConfig({
       [remarkSandpack, { componentName: ["Playground"] }],
     ],
     rehypePlugins: [
-      rehypeSlug,
+      rehypeSlugCompat,
       [
         rehypeExternalLinks,
         {
