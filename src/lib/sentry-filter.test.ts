@@ -23,6 +23,44 @@ describe("shouldDropSentryEvent", () => {
     expect(shouldDropSentryEvent(event)).toBe(true);
   });
 
+  it("drops aborted transition unhandled rejections", () => {
+    const event = {
+      tags: {
+        mechanism: "auto.browser.global_handlers.onunhandledrejection",
+      },
+      exception: {
+        values: [
+          {
+            type: "Error",
+            value:
+              "InvalidStateError: Transition was aborted because of invalid state",
+          },
+        ],
+      },
+    };
+
+    expect(shouldDropSentryEvent(event)).toBe(true);
+  });
+
+  it("keeps aborted transition errors from other mechanisms", () => {
+    const event = {
+      tags: {
+        mechanism: "generic",
+      },
+      exception: {
+        values: [
+          {
+            type: "Error",
+            value:
+              "InvalidStateError: Transition was aborted because of invalid state",
+          },
+        ],
+      },
+    };
+
+    expect(shouldDropSentryEvent(event)).toBe(false);
+  });
+
   it("keeps unrelated events", () => {
     const event = {
       exception: {

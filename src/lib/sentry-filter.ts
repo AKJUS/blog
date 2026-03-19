@@ -3,6 +3,8 @@ const ETHICAL_ADS_PATTERNS = [
   "media.ethicalads.io/media/client/ethicalads.min.js",
   "ethicalads.min.js",
 ];
+const ABORTED_TRANSITION_ERROR =
+  "InvalidStateError: Transition was aborted because of invalid state";
 
 interface EventLike {
   message?: unknown;
@@ -14,8 +16,12 @@ interface EventLike {
     message?: unknown;
     formatted?: unknown;
   };
+  tags?: {
+    mechanism?: unknown;
+  };
   exception?: {
     values?: Array<{
+      type?: unknown;
       value?: unknown;
       stacktrace?: {
         frames?: Array<{
@@ -36,6 +42,21 @@ function hasEthicalAdsPattern(value: unknown): boolean {
   return ETHICAL_ADS_PATTERNS.some((pattern) => value.includes(pattern));
 }
 
+function isAbortedTransitionError(event: EventLike): boolean {
+  const isUnhandledRejection =
+    event.tags?.mechanism ===
+    "auto.browser.global_handlers.onunhandledrejection";
+
+  return (
+    isUnhandledRejection &&
+    event.exception?.values?.some(
+      (exceptionValue) =>
+        exceptionValue.type === "Error" &&
+        exceptionValue.value === ABORTED_TRANSITION_ERROR,
+    ) === true
+  );
+}
+
 export function shouldDropSentryEvent(event: unknown): boolean {
   const candidateEvent = event as EventLike;
   const candidates: unknown[] = [
@@ -54,5 +75,8 @@ export function shouldDropSentryEvent(event: unknown): boolean {
     }
   }
 
-  return candidates.some(hasEthicalAdsPattern);
+  return (
+    isAbortedTransitionError(candidateEvent) ||
+    candidates.some(hasEthicalAdsPattern)
+  );
 }
