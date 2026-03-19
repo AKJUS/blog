@@ -44,7 +44,8 @@ function hasEthicalAdsPattern(value: unknown): boolean {
 
 function isAbortedTransitionError(event: EventLike): boolean {
   const isUnhandledRejection =
-    event.tags?.mechanism === "auto.browser.global_handlers.onunhandledrejection";
+    event.tags?.mechanism ===
+    "auto.browser.global_handlers.onunhandledrejection";
 
   return (
     isUnhandledRejection &&
