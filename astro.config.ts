@@ -20,6 +20,8 @@ import { SITE } from "./src/constants";
 import { remarkAsides } from "./src/remark";
 import { pagefindIntegration } from "./src/utils";
 
+import "dotenv/config";
+
 export default defineConfig({
   output: "static",
   base: "/blog",
