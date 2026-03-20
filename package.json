@@ -11,6 +11,7 @@
     "typecheck": "astro check",
     "astro": "astro",
     "lint:knip": "knip --treat-config-hints-as-errors",
+    "lint:knip:fix": "knip --treat-config-hints-as-errors --fix --allow-remove-files",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "vitest run",
