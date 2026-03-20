@@ -4,6 +4,7 @@ export interface Sponsor {
   image: string;
   amount: number;
   emoji: string;
+  startedAt: string;
   imageAlt?: string;
 }
 
@@ -22,6 +23,7 @@ interface GithubSponsorsTier {
 }
 
 export interface GithubSponsorshipNode {
+  createdAt: string;
   isOneTimePayment: boolean;
   privacyLevel: "PUBLIC" | "PRIVATE";
   sponsorEntity: SponsorEntity | null;
@@ -69,6 +71,7 @@ const SPONSORS_QUERY = `
         includePrivate: false
       ) {
         nodes {
+          createdAt
           isOneTimePayment
           privacyLevel
           sponsorEntity {
@@ -115,6 +118,23 @@ export const getTierEmoji = (tier: GithubSponsorsTier): string => {
   );
 };
 
+export const compareSponsors = (left: Sponsor, right: Sponsor): number => {
+  if (left.amount !== right.amount) return right.amount - left.amount;
+
+  const leftStartedAt = Date.parse(left.startedAt);
+  const rightStartedAt = Date.parse(right.startedAt);
+
+  if (Number.isNaN(leftStartedAt) || Number.isNaN(rightStartedAt)) {
+    throw new Error(
+      `Invalid sponsor timestamp: ${left.startedAt} / ${right.startedAt}`,
+    );
+  }
+
+  if (leftStartedAt !== rightStartedAt) return leftStartedAt - rightStartedAt;
+
+  return left.name.localeCompare(right.name);
+};
+
 const normalizeSponsorNode = (node: GithubSponsorshipNode): Sponsor => {
   if (node.isOneTimePayment)
     throw new Error(
@@ -135,6 +155,7 @@ const normalizeSponsorNode = (node: GithubSponsorshipNode): Sponsor => {
     image: node.sponsorEntity.avatarUrl,
     amount: node.tier.monthlyPriceInDollars,
     emoji: getTierEmoji(node.tier),
+    startedAt: node.createdAt,
   };
 };
 
@@ -144,7 +165,7 @@ export const normalizeSponsors = (
   const recurringSponsors = nodes.filter(
     (node) => !node.isOneTimePayment && node.privacyLevel === "PUBLIC",
   );
-  return recurringSponsors.map(normalizeSponsorNode);
+  return recurringSponsors.map(normalizeSponsorNode).sort(compareSponsors);
 };
 
 const getRequiredGithubToken = (token = process.env.GITHUB_TOKEN): string => {

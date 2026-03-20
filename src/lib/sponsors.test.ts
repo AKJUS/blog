@@ -1,6 +1,7 @@
 import type { GithubSponsorshipNode } from "./sponsors";
 import { describe, expect, it, vi } from "vitest";
 import {
+  compareSponsors,
   getTierEmoji,
   isPremiumAmount,
   loadSponsors,
@@ -18,6 +19,7 @@ const createResponse = (json: unknown, status = 200) =>
 const createNode = (
   overrides: Partial<GithubSponsorshipNode> = {},
 ): GithubSponsorshipNode => ({
+  createdAt: "2024-01-01T00:00:00.000Z",
   isOneTimePayment: false,
   privacyLevel: "PUBLIC",
   sponsorEntity: {
@@ -129,6 +131,7 @@ describe("normalizeSponsors", () => {
         emoji: "🥈",
         image: "https://avatars.githubusercontent.com/u/1?s=400",
         name: "Alice",
+        startedAt: "2024-01-01T00:00:00.000Z",
         url: "https://github.com/alice",
       },
     ]);
@@ -154,6 +157,7 @@ describe("normalizeSponsors", () => {
         emoji: "🥈",
         image: "https://avatars.githubusercontent.com/u/2?s=400",
         name: "Bob",
+        startedAt: "2024-01-01T00:00:00.000Z",
         url: "https://github.com/bob",
       },
     ]);
@@ -179,9 +183,62 @@ describe("normalizeSponsors", () => {
         emoji: "🥈",
         image: "https://avatars.githubusercontent.com/u/2?s=400",
         name: "Public User",
+        startedAt: "2024-01-01T00:00:00.000Z",
         url: "https://github.com/public-user",
       },
     ]);
+  });
+
+  it("sorts sponsors by amount descending and oldest first within the same amount", () => {
+    expect(
+      normalizeSponsors([
+        createNode({
+          createdAt: "2024-03-01T00:00:00.000Z",
+          sponsorEntity: {
+            __typename: "User",
+            avatarUrl: "https://avatars.githubusercontent.com/u/3?s=400",
+            login: "newer-bronze",
+            name: "Newer Bronze",
+            url: "https://github.com/newer-bronze",
+          },
+          tier: {
+            isCustomAmount: false,
+            monthlyPriceInDollars: 50,
+            name: "$50 a month",
+          },
+        }),
+        createNode({
+          createdAt: "2024-01-01T00:00:00.000Z",
+          sponsorEntity: {
+            __typename: "User",
+            avatarUrl: "https://avatars.githubusercontent.com/u/4?s=400",
+            login: "older-bronze",
+            name: "Older Bronze",
+            url: "https://github.com/older-bronze",
+          },
+          tier: {
+            isCustomAmount: false,
+            monthlyPriceInDollars: 50,
+            name: "$50 a month",
+          },
+        }),
+        createNode({
+          createdAt: "2024-02-01T00:00:00.000Z",
+          sponsorEntity: {
+            __typename: "User",
+            avatarUrl: "https://avatars.githubusercontent.com/u/5?s=400",
+            login: "diamond",
+            name: "Diamond",
+            url: "https://github.com/diamond",
+          },
+          tier: {
+            isCustomAmount: false,
+            monthlyPriceInDollars: 300,
+            name: "$300 a month",
+          },
+        }),
+      ]).map((sponsor) => sponsor.name),
+    ).toEqual(["Diamond", "Older Bronze", "Newer Bronze"]);
   });
 });
 
@@ -191,6 +248,31 @@ describe("isPremiumAmount", () => {
     expect(isPremiumAmount(300)).toBe(true);
     expect(isPremiumAmount(10)).toBe(false);
     expect(isPremiumAmount(1)).toBe(false);
+  });
+});
+
+describe("compareSponsors", () => {
+  it("orders the same amount by oldest first", () => {
+    expect(
+      compareSponsors(
+        {
+          amount: 20,
+          emoji: "🥳",
+          image: "a",
+          name: "Older",
+          startedAt: "2024-01-01T00:00:00.000Z",
+          url: "https://example.com/older",
+        },
+        {
+          amount: 20,
+          emoji: "🥳",
+          image: "b",
+          name: "Newer",
+          startedAt: "2024-02-01T00:00:00.000Z",
+          url: "https://example.com/newer",
+        },
+      ) < 0,
+    ).toBe(true);
   });
 });
 
@@ -282,6 +364,7 @@ describe("loadSponsors", () => {
         emoji: "🥈",
         image: "https://avatars.githubusercontent.com/u/1?s=400",
         name: "Alice",
+        startedAt: "2024-01-01T00:00:00.000Z",
         url: "https://github.com/alice",
       },
       {
@@ -289,6 +372,7 @@ describe("loadSponsors", () => {
         emoji: "❤️",
         image: "https://avatars.githubusercontent.com/u/3?s=400",
         name: "friend-org",
+        startedAt: "2024-01-01T00:00:00.000Z",
         url: "https://github.com/friend-org",
       },
       {
@@ -296,6 +380,7 @@ describe("loadSponsors", () => {
         emoji: "🙏",
         image: "https://avatars.githubusercontent.com/u/4?s=400",
         name: "Thanks User",
+        startedAt: "2024-01-01T00:00:00.000Z",
         url: "https://github.com/thanks-user",
       },
     ]);
