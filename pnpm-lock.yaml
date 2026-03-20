@@ -67,6 +67,9 @@ importers:
       astro-expressive-code:
         specifier: ^0.41.3
         version: 0.41.3(astro@5.15.3(@types/node@24.9.2)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.52.5)(terser@5.46.0)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.1))
+      dotenv:
+        specifier: ^17.3.1
+        version: 17.3.1
       expressive-code-twoslash:
         specifier: ^0.5.3
         version: 0.5.3(patch_hash=335c5ca59a22d30f81caa6e6e6f95ee7ff02349140dac74e6b9bf7a2a8038261)(@expressive-code/core@0.41.3)(expressive-code@0.41.3)(typescript@5.9.3)
@@ -2912,6 +2915,10 @@ packages:
 
   dotenv@16.5.0:
     resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+    engines: {node: '>=12'}
+
+  dotenv@17.3.1:
+    resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
     engines: {node: '>=12'}
 
   dset@3.1.4:
@@ -9048,6 +9055,8 @@ snapshots:
   dlv@1.1.3: {}
 
   dotenv@16.5.0: {}
+
+  dotenv@17.3.1: {}
 
   dset@3.1.4: {}
 

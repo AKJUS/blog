@@ -2,118 +2,245 @@ export interface Sponsor {
   name: string;
   url: string;
   image: string;
-  tier: string;
+  amount: number;
+  emoji: string;
   imageAlt?: string;
 }
 
-export const sponsors: Sponsor[] = [
-  {
-    name: "Tanner Linsley",
-    url: "https://tanstack.com/",
-    image: "https://avatars.githubusercontent.com/u/72518640?s=400",
-    tier: "💍 Platinum",
-  },
-  {
-    name: "Workleap",
-    url: "https://www.workleap.com",
-    image: "https://avatars.githubusercontent.com/u/53535748?s=400",
-    tier: "💎 Diamond",
-  },
-  {
-    name: "wevm",
-    url: "https://wevm.dev/",
-    image: "https://avatars.githubusercontent.com/u/109633172?s=400",
-    tier: "🥇 Gold",
-  },
-  {
-    name: "React Bricks",
-    url: "https://reactbricks.com/",
-    image: "https://avatars.githubusercontent.com/u/60979227?s=400",
-    tier: "🥉 Bronze",
-  },
-  {
-    name: "ElevenLabs",
-    url: "https://elevenlabs.io/",
-    image: "https://avatars.githubusercontent.com/u/94471909?s=400",
-    tier: "🥉 Bronze",
-  },
-  {
-    name: "Advantys",
-    url: "https://www.advantys.com/",
-    image: "https://avatars.githubusercontent.com/u/20905387?s=400",
-    tier: "🥳 Sponsor",
-  },
-  {
-    name: "Jonas Daniels",
-    url: "https://github.com/jnsdls",
-    image: "https://avatars.githubusercontent.com/u/8204858?s=400",
-    tier: "🥳 Sponsor",
-  },
-  {
-    name: "MonoLisa",
-    url: "https://www.monolisa.dev/?ref=dominik",
-    image: "https://avatars.githubusercontent.com/u/61585124?s=400",
-    tier: "🥳 Sponsor",
-  },
-  {
-    name: "Nadav Lebovitch",
-    url: "https://github.com/nadavl",
-    image: "https://avatars.githubusercontent.com/u/5332234?s=400",
-    tier: "🥳 Sponsor",
-  },
-  {
-    name: "Jeremy Brown",
-    url: "https://github.com/jlbmagic",
-    image: "https://avatars.githubusercontent.com/u/20194907?s=400",
-    tier: "🥳 Sponsor",
-  },
-  {
-    name: "deliver.media",
-    url: "https://deliver.media/",
-    image: "https://avatars.githubusercontent.com/u/120005519?s=400",
-    tier: "🥳 Sponsor",
-  },
-  {
-    name: "Matt Sutkowski",
-    url: "https://github.com/msutkowski",
-    image: "https://avatars.githubusercontent.com/u/784953?s=400",
-    tier: "🎗 Supporter",
-  },
-  {
-    name: "Thomas Ballinger",
-    url: "https://ballingt.com",
-    image: "https://avatars.githubusercontent.com/u/458879?s=400",
-    tier: "🎗 Supporter",
-  },
-  {
-    name: "Robin Wieruch",
-    url: "https://www.robinwieruch.de/",
-    image: "https://avatars.githubusercontent.com/u/2479967?s=400",
-    tier: "🎗 Supporter",
-  },
-  {
-    name: "Venue Ink",
-    url: "https://www.venue.ink/",
-    image: "https://avatars.githubusercontent.com/u/67328248?s=400",
-    tier: "🎗 Supporter",
-  },
-  {
-    name: "nuqs",
-    url: "https://nuqs.dev/",
-    image: "https://avatars.githubusercontent.com/u/43356325?s=400",
-    imageAlt: "47ng",
-    tier: "🪙 Custom",
-  },
-];
+interface SponsorEntity {
+  __typename: "User" | "Organization";
+  avatarUrl: string;
+  login: string;
+  name: string | null;
+  url: string;
+}
 
-const premiumTiers = new Set([
-  "💍 Platinum",
-  "💎 Diamond",
-  "🥇 Gold",
-  "🥉 Bronze",
-  "🥳 Sponsor",
+interface GithubSponsorsTier {
+  isCustomAmount: boolean;
+  monthlyPriceInDollars: number;
+  name: string;
+}
+
+export interface GithubSponsorshipNode {
+  isOneTimePayment: boolean;
+  privacyLevel: "PUBLIC" | "PRIVATE";
+  sponsorEntity: SponsorEntity | null;
+  tier: GithubSponsorsTier | null;
+}
+
+interface GithubSponsorsResponse {
+  data?: {
+    user?: {
+      sponsorshipsAsMaintainer?: {
+        nodes?: GithubSponsorshipNode[];
+        pageInfo?: {
+          endCursor: string | null;
+          hasNextPage: boolean;
+        };
+      };
+    } | null;
+  };
+  errors?: Array<{
+    message: string;
+  }>;
+}
+
+const GITHUB_GRAPHQL_URL = "https://api.github.com/graphql";
+const SPONSORABLE_LOGIN = "TkDodo";
+const TIER_AMOUNT_MAP = new Map<number, string>([
+  [1, "🙏"],
+  [5, "❤️"],
+  [10, "🎗️"],
+  [20, "🥳"],
+  [50, "🥉"],
+  [100, "🥈"],
+  [200, "🥇"],
+  [300, "💎"],
+  [500, "💍"],
 ]);
 
-export const premiumSponsors = sponsors.filter((sponsor) =>
-  premiumTiers.has(sponsor.tier),
-);
+const SPONSORS_QUERY = `
+  query SponsorsForMaintainer($login: String!, $after: String) {
+    user(login: $login) {
+      sponsorshipsAsMaintainer(
+        first: 100
+        after: $after
+        activeOnly: true
+        includePrivate: false
+      ) {
+        nodes {
+          isOneTimePayment
+          privacyLevel
+          sponsorEntity {
+            __typename
+            ... on User {
+              avatarUrl(size: 400)
+              login
+              name
+              url
+            }
+            ... on Organization {
+              avatarUrl(size: 400)
+              login
+              name
+              url
+            }
+          }
+          tier {
+            isCustomAmount
+            monthlyPriceInDollars
+            name
+          }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+      }
+    }
+  }
+`;
+
+let sponsorsPromise: Promise<Sponsor[]> | undefined;
+
+export const isPremiumAmount = (amount: number) => amount >= 20;
+
+export const getTierEmoji = (tier: GithubSponsorsTier): string => {
+  const mappedAmountTier = TIER_AMOUNT_MAP.get(tier.monthlyPriceInDollars);
+
+  if (mappedAmountTier) return mappedAmountTier;
+
+  throw new Error(
+    `Unknown GitHub Sponsors tier: ${tier.name} ($${tier.monthlyPriceInDollars}/month)`,
+  );
+};
+
+const normalizeSponsorNode = (node: GithubSponsorshipNode): Sponsor => {
+  if (node.isOneTimePayment)
+    throw new Error(
+      "One-time sponsorships should be filtered before normalization",
+    );
+
+  if (!node.sponsorEntity)
+    throw new Error("GitHub Sponsors response is missing sponsorEntity");
+
+  if (!node.tier)
+    throw new Error(
+      `GitHub Sponsors response is missing tier for ${node.sponsorEntity.login}`,
+    );
+
+  return {
+    name: node.sponsorEntity.name?.trim() || node.sponsorEntity.login,
+    url: node.sponsorEntity.url,
+    image: node.sponsorEntity.avatarUrl,
+    amount: node.tier.monthlyPriceInDollars,
+    emoji: getTierEmoji(node.tier),
+  };
+};
+
+export const normalizeSponsors = (
+  nodes: GithubSponsorshipNode[],
+): Sponsor[] => {
+  const recurringSponsors = nodes.filter(
+    (node) => !node.isOneTimePayment && node.privacyLevel === "PUBLIC",
+  );
+  return recurringSponsors.map(normalizeSponsorNode);
+};
+
+const getRequiredGithubToken = (token = process.env.GITHUB_TOKEN): string => {
+  if (!token)
+    throw new Error(
+      "Missing required GITHUB_TOKEN for GitHub Sponsors build-time fetch",
+    );
+
+  return token;
+};
+
+const fetchSponsorsPage = async (
+  after: string | null,
+  fetchImpl: typeof fetch,
+  token: string,
+): Promise<GithubSponsorsResponse> => {
+  const response = await fetchImpl(GITHUB_GRAPHQL_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      query: SPONSORS_QUERY,
+      variables: {
+        login: SPONSORABLE_LOGIN,
+        after,
+      },
+    }),
+  });
+
+  if (!response.ok)
+    throw new Error(`GitHub Sponsors request failed with ${response.status}`);
+
+  return response.json() as Promise<GithubSponsorsResponse>;
+};
+
+const extractSponsorships = (
+  payload: GithubSponsorsResponse,
+): {
+  nodes: GithubSponsorshipNode[];
+  pageInfo: {
+    endCursor: string | null;
+    hasNextPage: boolean;
+  };
+} => {
+  if (payload.errors?.length) {
+    throw new Error(
+      `GitHub Sponsors query failed: ${payload.errors.map((error) => error.message).join("; ")}`,
+    );
+  }
+
+  const connection = payload.data?.user?.sponsorshipsAsMaintainer;
+
+  if (!connection?.nodes || !connection.pageInfo)
+    throw new Error("GitHub Sponsors query returned an unexpected payload");
+
+  return {
+    nodes: connection.nodes,
+    pageInfo: connection.pageInfo,
+  };
+};
+
+export const loadSponsors = async (
+  fetchImpl: typeof fetch = fetch,
+  token = process.env.GITHUB_TOKEN,
+): Promise<Sponsor[]> => {
+  const githubToken = getRequiredGithubToken(token);
+  const nodes: GithubSponsorshipNode[] = [];
+  let after: string | null = null;
+
+  while (true) {
+    const payload = await fetchSponsorsPage(after, fetchImpl, githubToken);
+    const connection = extractSponsorships(payload);
+
+    nodes.push(...connection.nodes);
+
+    if (!connection.pageInfo.hasNextPage) break;
+
+    after = connection.pageInfo.endCursor;
+
+    if (!after)
+      throw new Error(
+        "GitHub Sponsors pagination returned hasNextPage without an endCursor",
+      );
+  }
+
+  return normalizeSponsors(nodes);
+};
+
+export const getSponsors = async (): Promise<Sponsor[]> => {
+  sponsorsPromise ??= loadSponsors();
+  return sponsorsPromise;
+};
+
+export const getPremiumSponsors = async (): Promise<Sponsor[]> => {
+  const sponsors = await getSponsors();
+  return sponsors.filter((sponsor) => isPremiumAmount(sponsor.amount));
+};
