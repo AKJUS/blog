@@ -31,6 +31,7 @@ export default defineConfig({
     ...(process.env.NODE_ENV === "production"
       ? [
           sentry({
+            telemetry: false,
             org: process.env.SENTRY_ORG,
             project: process.env.SENTRY_PROJECT,
             authToken: process.env.SENTRY_AUTH_TOKEN,
@@ -66,7 +67,7 @@ export default defineConfig({
     },
     // Astro 6 config types come from Vite 7, but @tailwindcss/vite still exposes
     // a Vite 6 plugin type here, so we cast the plugin item to avoid a false-positive.
-    plugins: [...tailwindcss().map((plugin) => plugin as any)],
+    plugins: tailwindcss().map((plugin) => plugin as any),
   },
   image: {
     service: imageService(),

@@ -48,7 +48,7 @@ export function getPostSlug(entry: CollectionEntry<"blog">): string {
 
   const parts = entry.id.split("/");
   const parentFolder = parts.at(-2);
-  return parentFolder ?? parts[0];
+  return parentFolder ?? parts[0] ?? "";
 }
 
 /**

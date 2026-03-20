@@ -1,7 +1,7 @@
 /**
  * Metadata for your site
  */
-export const SITE: Record<string, string> = {
+export const SITE = {
   url: "https://tkdodo.eu",
   title: "TkDodo's blog",
   titleDefault: "TkDodo's blog",
@@ -10,7 +10,7 @@ export const SITE: Record<string, string> = {
   lang: "en-US",
   defaultOgImage: "/blog/blog-banner.png",
   defaultAuthor: "TkDodo",
-};
+} as const;
 
 interface Header {
   internal: Array<{ title: string; url: string }>;

@@ -162,6 +162,7 @@ export default function OgImageTemplate({
             }}
           >
             <img
+              alt=""
               {...img}
               style={{
                 width: imageBoxWidth,

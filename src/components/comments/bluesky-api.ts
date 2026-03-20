@@ -225,7 +225,7 @@ export function normalizeThreadResponse(
 async function fetchThread(
   atUri: string,
   fetchImpl: typeof fetch,
-): Promise<unknown | null> {
+): Promise<unknown> {
   const endpoint = `${BLUESKY_API}/xrpc/app.bsky.feed.getPostThread?uri=${encodeURIComponent(atUri)}&depth=50`;
   const response = await fetchImpl(endpoint);
   if (!response.ok) return null;

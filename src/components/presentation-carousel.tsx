@@ -7,7 +7,7 @@ export function PresentationCarousel(props: PresentationCarouselProps) {
 
   React.useEffect(() => {
     let mounted = true;
-    import("./presentation-carousel-client").then((module) => {
+    void import("./presentation-carousel-client").then((module) => {
       if (mounted) {
         setClientCarousel(() => module.PresentationCarouselClient);
       }
