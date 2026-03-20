@@ -1,5 +1,6 @@
 import { glob } from "astro/loaders";
-import { defineCollection, z } from "astro:content";
+import { z } from "astro/zod";
+import { defineCollection } from "astro:content";
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/index.mdx", base: "./content/posts" }),
@@ -14,7 +15,7 @@ const blog = defineCollection({
       .optional()
       .default([]),
     banner: z.string().optional(),
-    bluesky: z.string().url().optional(),
+    bluesky: z.url().optional(),
     slug: z.string().optional(),
     searchIndex: z.boolean().optional().default(true),
   }),

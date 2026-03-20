@@ -13,10 +13,10 @@ import { toString } from "hast-util-to-string";
 import { h, s } from "hastscript";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeExternalLinks from "rehype-external-links";
-import rehypeSlug from "rehype-slug";
 import remarkDirective from "remark-directive";
 import remarkSmartypants from "remark-smartypants";
 import { SITE } from "./src/constants";
+import { rehypeSlugCompat } from "./src/lib/rehype-slug-compat";
 import { remarkAsides } from "./src/remark";
 import { pagefindIntegration } from "./src/utils";
 
@@ -64,7 +64,9 @@ export default defineConfig({
     resolve: {
       dedupe: ["react", "react-dom"],
     },
-    plugins: [tailwindcss()],
+    // Astro 6 config types come from Vite 7, but @tailwindcss/vite still exposes
+    // a Vite 6 plugin type here, so we cast the plugin item to avoid a false-positive.
+    plugins: [...tailwindcss().map((plugin) => plugin as any)],
   },
   image: {
     service: imageService(),
@@ -81,7 +83,7 @@ export default defineConfig({
       [remarkSandpack, { componentName: ["Playground"] }],
     ],
     rehypePlugins: [
-      rehypeSlug,
+      rehypeSlugCompat,
       [
         rehypeExternalLinks,
         {
