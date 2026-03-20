@@ -4,6 +4,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import satori from "satori";
 import sharp from "sharp";
+import { regex } from "arkregex";
 import OgImageTemplate from "./og-image-template";
 
 interface Frontmatter {
@@ -35,13 +36,15 @@ function toDateLabel(date: string | Date | undefined): string {
   }
 
   const raw = String(date).trim();
-  const isoPrefixMatch = raw.match(/^(\d{4}-\d{2}-\d{2})/);
+  const isoPrefixMatch = regex("^(d{4}-d{2}-d{2})").exec(raw);
   if (isoPrefixMatch) {
     const [yearString, monthString] = isoPrefixMatch[1].split("-");
-    const year = Number.parseInt(yearString, 10);
-    const month = Number.parseInt(monthString, 10);
-    if (month >= 1 && month <= 12) {
-      return `${monthNames[month - 1]} ${year}`;
+    if (yearString && monthString) {
+      const year = Number.parseInt(yearString, 10);
+      const month = Number.parseInt(monthString, 10);
+      if (month >= 1 && month <= 12) {
+        return `${monthNames[month - 1]} ${year}`;
+      }
     }
   }
 
