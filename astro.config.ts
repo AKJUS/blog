@@ -31,6 +31,7 @@ export default defineConfig({
     ...(process.env.NODE_ENV === "production"
       ? [
           sentry({
+            telemetry: false,
             org: process.env.SENTRY_ORG,
             project: process.env.SENTRY_PROJECT,
             authToken: process.env.SENTRY_AUTH_TOKEN,
