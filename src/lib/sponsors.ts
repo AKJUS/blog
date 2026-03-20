@@ -1,4 +1,4 @@
-export interface Sponsor {
+interface Sponsor {
   name: string;
   url: string;
   image: string;
