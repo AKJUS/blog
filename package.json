@@ -15,8 +15,8 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "vitest run",
-    "format:check": "prettier --check .",
-    "format:write": "prettier --write .",
+    "format:check": "oxfmt --check . && prettier --check \"src/**/*.astro\"",
+    "format:write": "oxfmt . && prettier --write \"src/**/*.astro\"",
     "ogimages": "tsx ./scripts/og-image.tsx"
   },
   "dependencies": {
@@ -66,6 +66,7 @@
     "knip": "^6.0.0",
     "mdast-util-mdx-jsx": "^3.2.0",
     "mdast-util-to-string": "^4.0.0",
+    "oxfmt": "^0.41.0",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
     "rehype-autolink-headings": "^7.1.0",
