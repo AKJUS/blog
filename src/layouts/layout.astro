@@ -9,6 +9,7 @@ import "@styles/global.css";
 import "@styles/expressive-code.css";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const faviconBasePath = import.meta.env.DEV ? basePath : "";
 const plausibleDomain = new URL(SITE.url).hostname;
 ---
 
@@ -34,26 +35,26 @@ const plausibleDomain = new URL(SITE.url).hostname;
     <link
       rel="icon"
       type="image/x-icon"
-      href={`/favicon.ico?v=3`}
+      href={`${faviconBasePath}/favicon.ico?v=3`}
       sizes="any"
     />
-    <link rel="shortcut icon" href={`/favicon.ico?v=3`} />
+    <link rel="shortcut icon" href={`${faviconBasePath}/favicon.ico?v=3`} />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href={`/favicon-32x32.png?v=3`}
+      href={`${faviconBasePath}/favicon-32x32.png?v=3`}
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href={`/favicon-16x16.png?v=3`}
+      href={`${faviconBasePath}/favicon-16x16.png?v=3`}
     />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href={`/apple-touch-icon.png?v=3`}
+      href={`${faviconBasePath}/apple-touch-icon.png?v=3`}
     />
     <meta name="generator" content={Astro.generator} />
     <ClientRouter />
@@ -65,7 +66,7 @@ const plausibleDomain = new URL(SITE.url).hostname;
           async
           data-domain={plausibleDomain}
           data-api="/api/event"
-          src="/js/script.js"
+          src={`${basePath}/js/script.js`}
         />
       )
     }
