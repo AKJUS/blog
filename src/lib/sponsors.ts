@@ -125,7 +125,7 @@ export const compareSponsors = (left: Sponsor, right: Sponsor): number => {
   const rightStartedAt = Date.parse(right.startedAt);
 
   if (Number.isNaN(leftStartedAt) || Number.isNaN(rightStartedAt)) {
-    throw new Error(
+    throw new TypeError(
       `Invalid sponsor timestamp: ${left.startedAt} / ${right.startedAt}`,
     );
   }
