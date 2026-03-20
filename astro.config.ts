@@ -20,6 +20,8 @@ import { rehypeSlugCompat } from "./src/lib/rehype-slug-compat";
 import { remarkAsides } from "./src/remark";
 import { pagefindIntegration } from "./src/utils";
 
+import "dotenv/config";
+
 export default defineConfig({
   output: "static",
   base: "/blog",
