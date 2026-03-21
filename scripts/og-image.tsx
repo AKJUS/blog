@@ -14,6 +14,11 @@ interface Frontmatter {
   date?: string | Date;
 }
 
+interface SharedAssets {
+  avatarDataUri: string;
+  interFont: Buffer;
+}
+
 function toDateLabel(date: string | Date | undefined): string {
   if (!date) return "";
   const monthNames = [
@@ -65,6 +70,7 @@ async function generateOgImage(
   slug: string,
   postsRoot: string,
   outDir: string,
+  sharedAssets: SharedAssets,
 ) {
   const mdxPath = path.join(postsRoot, slug, "index.mdx");
   try {
@@ -116,15 +122,11 @@ async function generateOgImage(
   const resizedMetadata = await sharp(resizedBanner).metadata();
   const format = getImageFormat(frontmatter.banner);
   const base64Banner = resizedBanner.toString("base64");
-  const avatar = await fs.readFile(
-    path.join(process.cwd(), "src", "assets", "profile-og.jpg"),
-  );
-  const avatarDataUri = `data:image/jpeg;base64,${avatar.toString("base64")}`;
 
   const svg = await satori(
     <OgImageTemplate
       title={frontmatter.title}
-      avatarSrc={avatarDataUri}
+      avatarSrc={sharedAssets.avatarDataUri}
       orientation={orientation}
       tagsLine={tagsLine}
       dateLabel={dateLabel}
@@ -140,9 +142,7 @@ async function generateOgImage(
       fonts: [
         {
           name: "Inter",
-          data: await fs.readFile(
-            path.join(process.cwd(), "public", "fonts", "Inter-Regular.woff"),
-          ),
+          data: sharedAssets.interFont,
           weight: 400,
           style: "normal",
         },
@@ -162,21 +162,48 @@ async function generateOgImage(
   console.log(`Generated ${outputPath}`);
 }
 
+async function loadSharedAssets(): Promise<SharedAssets> {
+  const [avatar, interFont] = await Promise.all([
+    fs.readFile(path.join(process.cwd(), "src", "assets", "profile-og.jpg")),
+    fs.readFile(
+      path.join(process.cwd(), "public", "fonts", "Inter-Regular.woff"),
+    ),
+  ]);
+
+  return {
+    avatarDataUri: `data:image/jpeg;base64,${avatar.toString("base64")}`,
+    interFont,
+  };
+}
+
 async function run() {
   const postsRoot = path.join(process.cwd(), "content", "posts");
   const outDir = path.join(process.cwd(), "public", "og-images");
   const entries = await fs.readdir(postsRoot, { withFileTypes: true });
+  const sharedAssets = await loadSharedAssets();
   await fs.mkdir(outDir, { recursive: true });
 
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    const slug = entry.name;
-    try {
-      await generateOgImage(slug, postsRoot, outDir);
-    } catch (error) {
-      console.warn(`Failed to generate OG image for ${slug}:`, error);
+  const slugs = entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+  const concurrency = Math.min(4, slugs.length || 1);
+  let nextIndex = 0;
+
+  const worker = async () => {
+    while (nextIndex < slugs.length) {
+      const slug = slugs[nextIndex];
+      nextIndex += 1;
+      if (!slug) continue;
+
+      try {
+        await generateOgImage(slug, postsRoot, outDir, sharedAssets);
+      } catch (error) {
+        console.warn(`Failed to generate OG image for ${slug}:`, error);
+      }
     }
-  }
+  };
+
+  await Promise.all(Array.from({ length: concurrency }, () => worker()));
 }
 
 run().catch((error) => {
