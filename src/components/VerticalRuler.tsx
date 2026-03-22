@@ -8,7 +8,7 @@ export function VerticalRuler({ height = "4rem" }: Props) {
 
   return (
     <hr
-      className={`w-1 ${heightClass} bg-primary my-[5em] mx-auto border-0 rounded-[5px]`}
+      className={`w-1 ${heightClass} bg-primary mx-auto my-[5em] rounded-[5px] border-0`}
     />
   );
 }

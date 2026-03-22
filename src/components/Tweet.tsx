@@ -259,27 +259,27 @@ export default function Tweet({
 
   return (
     <a
-      className="not-prose text-text no-underline hover:no-underline hover:text-text block w-full max-w-[550px] my-4 relative rounded-lg p-6 text-base md:text-lg border border-border transition-colors hover:bg-[var(--color-ic-bg)]"
+      className="not-prose text-text hover:text-text border-border relative my-4 block w-full max-w-[550px] rounded-lg border p-6 text-base no-underline transition-colors hover:bg-[var(--color-ic-bg)] hover:no-underline md:text-lg"
       href={href}
       target="_blank"
       rel="noopener noreferrer"
     >
-      <div className="absolute right-4 top-4">
+      <div className="absolute top-4 right-4">
         {normalizedType === "bsky" ? <BskyIcon /> : <TwitterIcon />}
       </div>
       <div className="flex">
         <Avatar>{avatarNode}</Avatar>
         <div>
           <div className="font-semibold">{name}</div>
-          <div className="text-xs md:text-base leading-3 md:leading-4 text-faded">
+          <div className="text-faded text-xs leading-3 md:text-base md:leading-4">
             @{handle}
           </div>
         </div>
       </div>
-      <div className="my-4 leading-normal [&_p]:m-0 [&_p]:leading-normal [&_p+p]:mt-4 [&_br]:leading-normal">
+      <div className="my-4 leading-normal [&_br]:leading-normal [&_p]:m-0 [&_p]:leading-normal [&_p+p]:mt-4">
         {children}
       </div>
-      <div className="text-xs md:text-base text-faded">
+      <div className="text-faded text-xs md:text-base">
         -{" "}
         {Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(
           dateValue,

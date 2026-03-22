@@ -85,16 +85,16 @@ function BlueskyRepliesSkeleton() {
       {SKELETON_ROWS.map((row) => (
         <li key={row} className="space-y-2">
           <div className="flex items-center gap-3">
-            <span className="inline-flex h-9 w-9 animate-pulse rounded-full bg-ic-bg" />
+            <span className="bg-ic-bg inline-flex h-9 w-9 animate-pulse rounded-full" />
             <div className="flex min-w-0 items-center gap-2">
-              <span className="inline-flex h-4 w-28 animate-pulse rounded bg-ic-bg" />
-              <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
+              <span className="bg-ic-bg inline-flex h-4 w-28 animate-pulse rounded" />
+              <span className="bg-ic-bg inline-flex h-4 w-14 animate-pulse rounded" />
             </div>
           </div>
           <div className="ml-12 space-y-2">
-            <span className="inline-flex h-5 w-[90%] animate-pulse rounded bg-ic-bg" />
-            <span className="inline-flex h-5 w-[72%] animate-pulse rounded bg-ic-bg" />
-            <span className="inline-flex h-4 w-12 animate-pulse rounded bg-ic-bg" />
+            <span className="bg-ic-bg inline-flex h-5 w-[90%] animate-pulse rounded" />
+            <span className="bg-ic-bg inline-flex h-5 w-[72%] animate-pulse rounded" />
+            <span className="bg-ic-bg inline-flex h-4 w-12 animate-pulse rounded" />
           </div>
         </li>
       ))}
@@ -128,34 +128,34 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
   return (
     <div className="space-y-5 text-sm md:text-base">
       {isInitialLoading ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
+        <div className="text-subtle flex flex-wrap items-center justify-between gap-3 text-sm">
           <div className="flex items-center gap-4">
             <span className="inline-flex min-w-16">
               {summary ? (
                 pluralize(summary.replyCount, "reply")
               ) : (
-                <span className="inline-flex h-4 w-16 animate-pulse rounded bg-ic-bg" />
+                <span className="bg-ic-bg inline-flex h-4 w-16 animate-pulse rounded" />
               )}
             </span>
             <span className="inline-flex min-w-14">
               {summary ? (
                 pluralize(summary.likeCount, "like")
               ) : (
-                <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
+                <span className="bg-ic-bg inline-flex h-4 w-14 animate-pulse rounded" />
               )}
             </span>
             <span className="inline-flex min-w-14">
               {summary ? (
                 pluralize(summary.quoteCount, "quote")
               ) : (
-                <span className="inline-flex h-4 w-14 animate-pulse rounded bg-ic-bg" />
+                <span className="bg-ic-bg inline-flex h-4 w-14 animate-pulse rounded" />
               )}
             </span>
           </div>
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="cursor-pointer rounded border border-border px-2 py-1 text-xs text-subtle hover:text-text"
+              className="border-border text-subtle hover:text-text cursor-pointer rounded border px-2 py-1 text-xs"
               disabled
             >
               Refresh
@@ -171,7 +171,7 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
           </div>
         </div>
       ) : (
-        <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-subtle">
+        <div className="text-subtle flex flex-wrap items-center justify-between gap-3 text-sm">
           <div className="flex items-center gap-4">
             <span>{pluralize(summary?.replyCount ?? 0, "reply")}</span>
             <span>{pluralize(summary?.likeCount ?? 0, "like")}</span>
@@ -180,7 +180,7 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="cursor-pointer rounded border border-border px-2 py-1 text-xs text-subtle hover:text-text"
+              className="border-border text-subtle hover:text-text cursor-pointer rounded border px-2 py-1 text-xs"
               onClick={() => query.refetch()}
               disabled={query.isFetching}
             >
@@ -201,13 +201,13 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
       {isInitialLoading ? (
         <BlueskyRepliesSkeleton />
       ) : replies.length === 0 ? (
-        <p className="text-sm text-subtle">No Bluesky replies yet.</p>
+        <p className="text-subtle text-sm">No Bluesky replies yet.</p>
       ) : (
         <ul className="space-y-4">
           {threadedReplies.map((thread, threadIndex) => (
             <li
               key={thread[0]?.id ?? threadIndex}
-              className="rounded-xl border border-border bg-ic-bg/25 p-4 md:p-5"
+              className="border-border bg-ic-bg/25 rounded-xl border p-4 md:p-5"
             >
               <ul className="space-y-5">
                 {thread.map((reply) => (
@@ -226,12 +226,12 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                         />
                       ) : (
                         <div
-                          className="h-9 w-9 rounded-full bg-ic-bg"
+                          className="bg-ic-bg h-9 w-9 rounded-full"
                           aria-hidden="true"
                         />
                       )}
                       <div className="min-w-0 text-sm">
-                        <span className="font-semibold text-text">
+                        <span className="text-text font-semibold">
                           {reply.author.displayName ?? reply.author.handle}
                         </span>{" "}
                         {reply.replyUrl ? (
@@ -251,7 +251,7 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                       </div>
                     </div>
 
-                    <p className="ml-12 whitespace-pre-wrap text-text">
+                    <p className="text-text ml-12 whitespace-pre-wrap">
                       {reply.segments.map((segment, index) =>
                         segment.href ? (
                           <a
@@ -276,7 +276,7 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                         href={reply.externalEmbed.uri}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="ml-12 block overflow-hidden rounded-lg border border-border bg-ic-bg/50 hover:border-primary"
+                        className="border-border bg-ic-bg/50 hover:border-primary ml-12 block overflow-hidden rounded-lg border"
                       >
                         <div className="flex items-stretch">
                           {reply.externalEmbed.thumb ? (
@@ -288,16 +288,16 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                             />
                           ) : null}
                           <div className="space-y-1 p-3 text-sm">
-                            <p className="line-clamp-1 text-primary">
+                            <p className="text-primary line-clamp-1">
                               {reply.externalEmbed.uri}
                             </p>
                             {reply.externalEmbed.title ? (
-                              <p className="line-clamp-1 text-text">
+                              <p className="text-text line-clamp-1">
                                 {reply.externalEmbed.title}
                               </p>
                             ) : null}
                             {reply.externalEmbed.description ? (
-                              <p className="line-clamp-2 text-subtle">
+                              <p className="text-subtle line-clamp-2">
                                 {reply.externalEmbed.description}
                               </p>
                             ) : null}
@@ -306,7 +306,7 @@ function BlueskyComments({ postUrl, onUnavailable }: MountOptions) {
                       </a>
                     )}
 
-                    <p className="ml-12 text-sm text-subtle">
+                    <p className="text-subtle ml-12 text-sm">
                       {pluralize(reply.likeCount, "like")}
                     </p>
                   </li>

@@ -16,14 +16,14 @@ export function TweetPoll({ options, votes }: Props) {
       {options.map(({ id, name, percentage, winner = false }) => (
         <span
           key={id}
-          className="relative min-h-8 flex items-center justify-between"
+          className="relative flex min-h-8 items-center justify-between"
         >
           <progress
             max={100}
             value={Number.parseFloat(percentage)}
-            className={`absolute inset-0 h-8 w-full appearance-none overflow-hidden rounded-[4px] border-none bg-transparent [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-[4px] [&::-webkit-progress-value]:bg-[var(--color-twitter-poll-bg)] [&::-moz-progress-bar]:rounded-[4px] [&::-moz-progress-bar]:bg-[var(--color-twitter-poll-bg)] ${
+            className={`absolute inset-0 h-8 w-full appearance-none overflow-hidden rounded-[4px] border-none bg-transparent [&::-moz-progress-bar]:rounded-[4px] [&::-moz-progress-bar]:bg-[var(--color-twitter-poll-bg)] [&::-webkit-progress-bar]:bg-transparent [&::-webkit-progress-value]:rounded-[4px] [&::-webkit-progress-value]:bg-[var(--color-twitter-poll-bg)] ${
               winner
-                ? "[&::-webkit-progress-value]:bg-[var(--color-twitter-poll-bg-winner)] [&::-moz-progress-bar]:bg-[var(--color-twitter-poll-bg-winner)]"
+                ? "[&::-moz-progress-bar]:bg-[var(--color-twitter-poll-bg-winner)] [&::-webkit-progress-value]:bg-[var(--color-twitter-poll-bg-winner)]"
                 : ""
             }`}
           />
@@ -33,7 +33,7 @@ export function TweetPoll({ options, votes }: Props) {
           <span className="z-10">{percentage}</span>
         </span>
       ))}
-      <span className="text-xs md:text-base text-faded">
+      <span className="text-faded text-xs md:text-base">
         {votes} votes · Final results
       </span>
     </span>

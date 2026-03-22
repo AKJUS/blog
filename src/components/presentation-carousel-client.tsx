@@ -40,7 +40,7 @@ export function PresentationCarouselClient({
       <div className="relative flex flex-col overflow-hidden">
         <button
           type="button"
-          className="absolute top-1/3 md:top-0 bottom-0 z-[1] flex items-start md:items-center justify-center bg-transparent border-0 text-center opacity-50 hover:opacity-100 transition-opacity duration-150 ease-in-out cursor-pointer text-text"
+          className="text-text absolute top-1/3 bottom-0 z-[1] flex cursor-pointer items-start justify-center border-0 bg-transparent text-center opacity-50 transition-opacity duration-150 ease-in-out hover:opacity-100 md:top-0 md:items-center"
           onClick={slideToPrevItem}
         >
           <span aria-label="previous slide" className="inline-flex h-8 w-8">
@@ -55,7 +55,7 @@ export function PresentationCarouselClient({
         </button>
         <button
           type="button"
-          className="absolute top-1/3 md:top-0 right-0 bottom-0 z-[1] flex items-start md:items-center justify-center bg-transparent border-0 text-center opacity-50 hover:opacity-100 transition-opacity duration-150 ease-in-out cursor-pointer text-text"
+          className="text-text absolute top-1/3 right-0 bottom-0 z-[1] flex cursor-pointer items-start justify-center border-0 bg-transparent text-center opacity-50 transition-opacity duration-150 ease-in-out hover:opacity-100 md:top-0 md:items-center"
           onClick={slideToNextItem}
         >
           <span aria-label="next slide" className="inline-flex h-8 w-8">

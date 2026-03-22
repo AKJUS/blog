@@ -76,11 +76,11 @@ export default function Aside({
 
   return (
     <aside
-      className={`text-text border-l-[6px] rounded-lg p-4 my-5 overflow-hidden bg-border ${borderClass}`}
+      className={`text-text bg-border my-5 overflow-hidden rounded-lg border-l-[6px] p-4 ${borderClass}`}
     >
       <div className={`flex items-center justify-between ${headerClass}`}>
         {title ? (
-          <span className="tracking-[0.05em] font-bold">{title}</span>
+          <span className="font-bold tracking-[0.05em]">{title}</span>
         ) : null}
         <Icon />
       </div>

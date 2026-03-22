@@ -45,7 +45,7 @@ export default function SeriesToc({ id, items }: Props) {
   // if the series is short enough, just render all items without truncation.
   if (itemsAsViewModel.length <= NO_TRUNCATE_MAX_ITEMS_LENGTH) {
     return (
-      <div className="rounded-lg bg-ic-bg/45 border border-border">
+      <div className="bg-ic-bg/45 border-border rounded-lg border">
         {/* Maybe you can give a title to the series and display it here */}
 
         <div className="px-4 py-2">
@@ -64,7 +64,7 @@ export default function SeriesToc({ id, items }: Props) {
   });
 
   return (
-    <div className="rounded-lg bg-ic-bg/45 border border-border">
+    <div className="bg-ic-bg/45 border-border rounded-lg border">
       {/* Maybe you can give a title to the series and display it here */}
 
       <div className="px-4 py-2">
@@ -80,8 +80,8 @@ export default function SeriesToc({ id, items }: Props) {
       </div>
 
       {itemsAsViewModel.length > itemsInWindow.length && (
-        <details className="border-t-2 border-border">
-          <summary className="px-4 py-2 leading-relaxed text-subtle cursor-pointer transition-colors duration-200 hover:bg-ic-bg">
+        <details className="border-border border-t-2">
+          <summary className="text-subtle hover:bg-ic-bg cursor-pointer px-4 py-2 leading-relaxed transition-colors duration-200">
             All {itemsAsViewModel.length} parts in the series
           </summary>
           <div className="px-4 pb-2">
@@ -136,7 +136,7 @@ function List({ indented = false, children }: ListProps) {
 function ListItemEllipsis({ srText }: { srText: React.ReactNode }) {
   return (
     <li className="!m-0 !p-0">
-      <div className="leading-relaxed text-faded">
+      <div className="text-faded leading-relaxed">
         <span aria-hidden="true" className="inline-block px-4">
           &#8942;
         </span>
@@ -185,7 +185,7 @@ function ListItemClickable({
  */
 function Marker({ children }: { children: React.ReactNode }) {
   return (
-    <span className="ml-2 text-xs md:text-sm text-faded uppercase font-bold">
+    <span className="text-faded ml-2 text-xs font-bold uppercase md:text-sm">
       {children}
     </span>
   );

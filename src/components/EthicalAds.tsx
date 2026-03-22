@@ -1,6 +1,6 @@
 export default function EthicalAds() {
   return (
-    <div className="not-prose mt-4 md:mt-[1.125rem] flex flex-col items-center md:items-start">
+    <div className="not-prose mt-4 flex flex-col items-center md:mt-[1.125rem] md:items-start">
       <div
         id="blog-ad"
         data-ea-publisher="tkdodoeu"

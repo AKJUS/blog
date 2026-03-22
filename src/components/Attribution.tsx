@@ -24,7 +24,7 @@ export default function Attribution({
           href={url}
           target="_blank"
           rel="noreferrer noopener"
-          className="font-normal text-subtle hover:text-subtle hover:underline"
+          className="text-subtle hover:text-subtle font-normal hover:underline"
         >
           {name}
         </a>

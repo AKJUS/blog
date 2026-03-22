@@ -6,7 +6,7 @@ interface Props {
 
 export default function SmallCentered({ children }: Props) {
   return (
-    <small className="not-prose block text-center -mt-10 mb-4 text-faded text-sm md:text-base leading-relaxed">
+    <small className="not-prose text-faded -mt-10 mb-4 block text-center text-sm leading-relaxed md:text-base">
       {children}
     </small>
   );
