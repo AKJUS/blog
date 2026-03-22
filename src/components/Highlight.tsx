@@ -13,9 +13,9 @@ export default function Highlight({ children }: Props) {
       />
       <div
         aria-hidden="true"
-        className="absolute -left-10 top-1/2 h-28 w-28 -translate-y-1/2 rounded-full bg-[color:color-mix(in_srgb,var(--color-primary)_16%,transparent)] blur-3xl"
+        className="absolute top-1/2 -left-10 h-28 w-28 -translate-y-1/2 rounded-full bg-[color:color-mix(in_srgb,var(--color-primary)_16%,transparent)] blur-3xl"
       />
-      <div className="relative text-[1.02em] font-semibold leading-relaxed text-highlight text-balance [&_em]:text-primary [&_p]:my-0 [&_strong]:text-primary [&>:first-child]:mt-0 [&>:last-child]:mb-0">
+      <div className="text-highlight [&_em]:text-primary [&_strong]:text-primary relative text-[1.02em] leading-relaxed font-semibold text-balance [&_p]:my-0 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
