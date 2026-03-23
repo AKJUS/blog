@@ -50,8 +50,9 @@ const placeholder = await getImage({
     alt={alt}
     aria-hidden="true"
     class="pointer-events-none absolute inset-0 z-0 !m-0 h-full w-full scale-[1.04] object-cover blur-xl transition-opacity duration-500 ease-out"
-    loading="eager"
-    decoding="async"
+    loading={loading}
+    fetchpriority={fetchpriority}
+    decoding={decoding}
   />
   <Image
     src={src}

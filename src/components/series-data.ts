@@ -132,6 +132,10 @@ export const dsSeriesItems = [
     id: "building-type-safe-compound-components",
     title: "#3: Building Type-Safe Compound Components",
   },
+  {
+    id: "test-ids-are-an-a11y-smell",
+    title: "#4: Test IDs are an a11y smell",
+  },
 ] as const satisfies ReadonlyArray<SeriesItem>;
 
 export const usSeriesItems = [
