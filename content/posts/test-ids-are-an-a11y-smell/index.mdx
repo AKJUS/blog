@@ -27,12 +27,14 @@ import { VerticalRuler } from '@components/VerticalRuler'
 
 <DsToc id="test-ids-are-an-a11y-smell" />
 
-<Translations translations={[
-  {
-    language: '한국어',
-    url: 'https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-test-ids-are-an-a11y-smell/',
-  },
-]} />
+<Translations
+  translations={[
+    {
+      language: '한국어',
+      url: 'https://chapdo.vercel.app/posts/%EB%B2%88%EC%97%AD-test-ids-are-an-a11y-smell/',
+    },
+  ]}
+/>
 
 I've come across a lot of articles lately claiming that using `data-testid` is the best way to define selectors in your tests. Apparently, they simplify element selection, ensure maintainability and stability and decouple your tests from UI changes.
 
