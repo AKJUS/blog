@@ -219,10 +219,7 @@ export const ADayOnTheOrangeSite = () => (
 );
 
 export const CodeColocation = () => (
-  <TweetIllustration
-    src={GEg89DDXsAA8DCImage}
-    alt="Code colocation"
-  />
+  <TweetIllustration src={GEg89DDXsAA8DCImage} alt="Code colocation" />
 );
 
 export const CynicsVsBuilders = () => (
