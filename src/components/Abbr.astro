@@ -1,5 +1,5 @@
 ---
-export interface Props {
+interface Props {
   label: string;
   id?: string;
 }
@@ -94,20 +94,19 @@ const tooltipId =
         from var(--tooltip-radius) 0,
         hline to calc(100% - var(--tooltip-radius)),
         curve to right var(--tooltip-radius) with right top,
-        vline to calc(
-          100% - (var(--tooltip-radius) + var(--tooltip-arrow-height))
-        ),
+        vline to
+          calc(100% - (var(--tooltip-radius) + var(--tooltip-arrow-height))),
         curve to calc(100% - var(--tooltip-radius))
-          calc(100% - var(--tooltip-arrow-height))
-          with right calc(100% - var(--tooltip-arrow-height)),
+          calc(100% - var(--tooltip-arrow-height)) with right
+          calc(100% - var(--tooltip-arrow-height)),
         hline to calc(50% + var(--tooltip-arrow-width)),
-        line by calc(var(--tooltip-arrow-width) * -1) var(--tooltip-arrow-height),
+        line by calc(var(--tooltip-arrow-width) * -1)
+          var(--tooltip-arrow-height),
         line by calc(var(--tooltip-arrow-width) * -1)
           calc(var(--tooltip-arrow-height) * -1),
         hline to var(--tooltip-radius),
-        curve to left calc(
-            100% - (var(--tooltip-radius) + var(--tooltip-arrow-height))
-          )
+        curve to left
+          calc(100% - (var(--tooltip-radius) + var(--tooltip-arrow-height)))
           with left calc(100% - var(--tooltip-arrow-height)),
         vline to var(--tooltip-radius),
         curve to var(--tooltip-radius) top with left top
