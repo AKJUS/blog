@@ -40,7 +40,7 @@ const { Content } = await render(entry);
 
 const allPosts = sortAsc(await getCollection("blog"));
 const detectedToc = entry.body?.match(
-  /<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|RtrToc)\b/,
+  /<(RqToc|DsToc|UsToc|TsrToc|HsToc|RcToc|MemoToc|RtrToc)\b/,
 )?.[1] as TocName | undefined;
 const seriesItems = detectedToc ? seriesByToc[detectedToc] : null;
 const currentSeriesIndex =
