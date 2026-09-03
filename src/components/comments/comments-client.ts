@@ -1,4 +1,5 @@
 import { parseBlueskyPostUrl } from "./bluesky-url";
+import { getGiscusDiscussionNumber } from "./giscus-discussion-number";
 
 interface GiscusConfig {
   repo: string;
@@ -97,7 +98,14 @@ function injectGiscus(
   script.setAttribute("data-repo-id", config.repoId);
   script.setAttribute("data-category", config.category);
   script.setAttribute("data-category-id", config.categoryId);
-  script.setAttribute("data-mapping", "pathname");
+  const discussionNumber = getGiscusDiscussionNumber(window.location.pathname);
+  script.setAttribute(
+    "data-mapping",
+    discussionNumber === undefined ? "pathname" : "number",
+  );
+  if (discussionNumber !== undefined) {
+    script.setAttribute("data-term", String(discussionNumber));
+  }
   script.setAttribute("data-strict", "0");
   script.setAttribute("data-reactions-enabled", "1");
   script.setAttribute("data-emit-metadata", "0");
